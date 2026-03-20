@@ -1,0 +1,2 @@
+
+> This repository serves as the version control platform for the final-semester project for subject DS200 - Big Data at University of Information Technology, Vietnam National University Ho Chi Minh city. 
