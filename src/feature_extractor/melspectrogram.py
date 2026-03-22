@@ -77,3 +77,10 @@ class MelScaleSpectrogram:
         plt.title(title)
         plt.tight_layout()
         plt.show()
+
+if __name__ == "__main__":
+    mel_extractor = MelScaleSpectrogram(to_db=True)
+    path = "/kaggle/input/datasets/mmoreaux/environmental-sound-classification-50/audio/audio/1-100032-A-0.wav"
+    y, sr = librosa.load(path, sr=44100)
+    mel_data = mel_extractor.transform(y)
+    print(f"Mel shape: {mel_data.shape}")
