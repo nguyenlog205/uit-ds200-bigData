@@ -1,7 +1,8 @@
 import numpy as np
 import librosa
 import librosa.display
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+
 
 class STFTChromagram:
     def __init__(self, sr=44100, hop_length=512, n_fft=2048, n_chroma=12):
@@ -21,20 +22,29 @@ class STFTChromagram:
             x_windowed = audio[start:start + self.n_fft] * self.window
             stft_matrix[:, m] = np.fft.rfft(x_windowed)
         # tính phổ công suất
-        power_spec = np.abs(stft_matrix)**2 
+        power_spec = np.abs(stft_matrix)**2
         # gom tần số theo lớp
-        chroma_filters = librosa.filters.chroma(sr=self.sr, n_fft=self.n_fft, n_chroma=self.n_chroma)
+        chroma_filters = librosa.filters.chroma(
+            sr=self.sr, n_fft=self.n_fft, n_chroma=self.n_chroma)
         chromagram = np.dot(chroma_filters, power_spec)
         chromagram = chromagram / np.max(chromagram)
         return chromagram
-    
+
     def shape(self, STFT):
         print(f"Shape of output: {STFT.shape}")
 
     def plot(self, feature_matrix, ax):
         # nhân ma trận 12 lớp 3 lần
+        '''
         feature_matrix_3x = np.tile(feature_matrix, (3, 1))
-        img = librosa.display.specshow(feature_matrix_3x, x_axis="time", sr=self.sr, hop_length=self.hop_length, ax=ax, cmap="magma")
+        img = librosa.display.specshow(
+            feature_matrix_3x,
+            x_axis="time",
+            sr=self.sr,
+            hop_length=self.hop_length,
+            ax=ax,
+            cmap="magma")
+        '''
         ax.set_ylabel("tone pitch class [-]", fontsize=11)
         y_ticks_pos = [0.5, 4.5, 8.5, 12.5, 16.5, 20.5, 24.5, 28.5, 32.5]
         y_ticks_labels = ['C', 'E', 'G#', 'C', 'E', 'G#', 'C', 'E', 'G#']
