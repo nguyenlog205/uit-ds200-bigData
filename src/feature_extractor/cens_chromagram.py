@@ -33,14 +33,13 @@ Parameters:
 Returns:
     np.ndarray: 2D array of shape (n_chroma, time_frames) representing the CENS chromagram.
 """
-
 import librosa
 
 
 class CENSChromagram:
     def __init__(self, sr=44100, hop_length=512, n_chroma=12,
                  fmin=librosa.note_to_hz('C1'), norm=1,
-                 bins_per_octave=12, win_len_smooth=41, norm_smooth='mean'):
+                 bins_per_octave=12, win_len_smooth=41):
         self.sr = sr
         self.hop_length = hop_length
         self.n_chroma = n_chroma
@@ -48,7 +47,6 @@ class CENSChromagram:
         self.norm = norm
         self.bins_per_octave = bins_per_octave
         self.win_len_smooth = win_len_smooth
-        self.norm_smooth = norm_smooth
 
     def transform(self, audio_1d):
         cens = librosa.feature.chroma_cens(
@@ -59,7 +57,6 @@ class CENSChromagram:
             fmin=self.fmin,
             norm=self.norm,
             bins_per_octave=self.bins_per_octave,
-            win_len_smooth=self.win_len_smooth,
-            norm_smooth=self.norm_smooth
+            win_len_smooth=self.win_len_smooth
         )
         return cens
