@@ -36,6 +36,7 @@ Returns:
 
 import librosa
 
+
 class CENSChromagram:
     def __init__(self, sr=44100, hop_length=512, n_chroma=12,
                  fmin=librosa.note_to_hz('C1'), norm=1,
