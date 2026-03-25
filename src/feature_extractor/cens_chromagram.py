@@ -36,18 +36,15 @@ Returns:
 
 import librosa
 
-
 class CENSChromagram:
-    def __init__(self, sr=44100, hop_length=512, n_chroma=12, n_octave=7,
-                 fmin=librosa.note_to_hz('C1'), norm=1, window='hann',
+    def __init__(self, sr=44100, hop_length=512, n_chroma=12,
+                 fmin=librosa.note_to_hz('C1'), norm=1,
                  bins_per_octave=12, win_len_smooth=41, norm_smooth='mean'):
         self.sr = sr
         self.hop_length = hop_length
         self.n_chroma = n_chroma
-        self.n_octave = n_octave
         self.fmin = fmin
         self.norm = norm
-        self.window = window
         self.bins_per_octave = bins_per_octave
         self.win_len_smooth = win_len_smooth
         self.norm_smooth = norm_smooth
@@ -58,10 +55,8 @@ class CENSChromagram:
             sr=self.sr,
             hop_length=self.hop_length,
             n_chroma=self.n_chroma,
-            n_octave=self.n_octave,
             fmin=self.fmin,
             norm=self.norm,
-            window=self.window,
             bins_per_octave=self.bins_per_octave,
             win_len_smooth=self.win_len_smooth,
             norm_smooth=self.norm_smooth

@@ -33,19 +33,17 @@ import librosa
 
 
 class CQTChromagram:
-    def __init__(self, sr=44100, hop_length=512, n_chroma=12, n_bins=84, bins_per_octave=12,
-                 fmin=librosa.note_to_hz('C1'), norm=1, window='hann'):
+    def __init__(self, sr=44100, hop_length=512, n_chroma=12,
+                 bins_per_octave=12, fmin=librosa.note_to_hz('C1'),
+                 norm=1):
         self.sr = sr
         self.hop_length = hop_length
         self.n_chroma = n_chroma
-        self.n_bins = n_bins
         self.bins_per_octave = bins_per_octave
         self.fmin = fmin
         self.norm = norm
-        self.window = window
 
     def transform(self, audio_1d):
-        # Compute CQT chromagram
         chroma = librosa.feature.chroma_cqt(
             y=audio_1d,
             sr=self.sr,
@@ -53,7 +51,6 @@ class CQTChromagram:
             n_chroma=self.n_chroma,
             bins_per_octave=self.bins_per_octave,
             fmin=self.fmin,
-            norm=self.norm,
-            window=self.window
+            norm=self.norm
         )
         return chroma
