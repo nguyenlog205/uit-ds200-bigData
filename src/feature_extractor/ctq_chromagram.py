@@ -29,21 +29,12 @@ Returns:
     np.ndarray: 2D array of shape (n_chroma, time_frames) representing the CQT chromagram.
 """
 
-import numpy as np
 import librosa
 
 
 class CQTChromagram:
-    def __init__(self,
-                 sr=44100,
-                 hop_length=512,
-                 n_chroma=12,
-                 n_bins=84,
-                 bins_per_octave=12,
-                 fmin=librosa.note_to_hz('C1'),
-                 norm=1,
-                 window='hann',
-                 dtype=np.float32):
+    def __init__(self, sr=44100, hop_length=512, n_chroma=12, n_bins=84, bins_per_octave=12,
+                 fmin=librosa.note_to_hz('C1'), norm=1, window='hann'):
         self.sr = sr
         self.hop_length = hop_length
         self.n_chroma = n_chroma
@@ -52,34 +43,17 @@ class CQTChromagram:
         self.fmin = fmin
         self.norm = norm
         self.window = window
-        self.dtype = dtype
 
-    def transform(self, audio):
-        """
-        Extract CQT chromagram from an audio signal.
-
-        Parameters:
-            audio : np.ndarray
-                1D audio array (should be loaded with sr=44100 as per specification).
-
-        Returns:
-            np.ndarray: 2D array of shape (n_chroma, time_frames).
-        """
-        # Ensure audio is 1D
-        if audio.ndim > 1:
-            audio = audio.squeeze()
-
-        # Compute CQT chromagram using librosa
-        cqt_chroma = librosa.feature.chroma_cqt(
-            y=audio,
+    def transform(self, audio_1d):
+        # Compute CQT chromagram
+        chroma = librosa.feature.chroma_cqt(
+            y=audio_1d,
             sr=self.sr,
             hop_length=self.hop_length,
             n_chroma=self.n_chroma,
-            n_bins=self.n_bins,
             bins_per_octave=self.bins_per_octave,
             fmin=self.fmin,
             norm=self.norm,
-            window=self.window,
-            dtype=self.dtype
+            window=self.window
         )
-        return cqt_chroma
+        return chroma

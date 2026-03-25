@@ -10,7 +10,7 @@ class CyclicTempogram:
         self.hop_length = hop_length
         self.win_length = win_length
 
-    def extract(self, audio):
+    def transform(self, audio):
         # tính onset strength O(m)
         onset_env = librosa.onset.onset_strength(
             y=audio, sr=self.sr, hop_length=self.hop_length)
