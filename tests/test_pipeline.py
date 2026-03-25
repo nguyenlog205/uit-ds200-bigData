@@ -42,8 +42,11 @@ def test_feature_returns_2d_matrix(feature_class, kwargs):
     extractor = feature_class(**kwargs)
     result = extractor.transform(MOCK_AUDIO)
     assert isinstance(
-        result, np.ndarray), f"{feature_class.__name__} did not return a numpy array"
-    assert result.ndim == 2, f"{feature_class.__name__} returned {result.ndim}D, expected 2D"
+        result, np.ndarray), f"{
+        feature_class.__name__} did not return a numpy array"
+    assert result.ndim == 2, f"{
+        feature_class.__name__} returned {
+        result.ndim}D, expected 2D"
     # Also ensure height > 0 and time > 0
     assert result.shape[0] > 0, "Height dimension is zero"
     assert result.shape[1] > 0, "Time dimension is zero"
@@ -110,5 +113,8 @@ def test_model_input_shape_matches_feature_output(
     except Exception as e:
         pytest.fail(f"Model forward pass failed with shape mismatch: {e}")
 
-    # Also check that the input shape defined by the factory matches what we expect
-    assert model.input_shape == input_shape, f"Model input shape {model.input_shape} does not match expected {input_shape}"
+    # Check input shape
+    assert model.input_shape == input_shape, (
+        f"Model input shape {model.input_shape} "
+        f"does not match expected {input_shape}"
+    )
