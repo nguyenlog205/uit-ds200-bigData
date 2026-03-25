@@ -4,7 +4,7 @@ Unit tests for feature extraction modules and CNN model architecture.
 
 import numpy as np
 import pytest
-import tensorflow as tf
+# import tensorflow as tf
 
 # Import our modules (adjust import paths as needed)
 from src.mel_spectrogram import MelSpectrogram
@@ -32,6 +32,8 @@ FEATURE_MODULES = [
 # ----------------------------------------------------------------------
 # Feature Tests
 # ----------------------------------------------------------------------
+
+
 @pytest.mark.parametrize("feature_class, kwargs", FEATURE_MODULES)
 def test_feature_returns_2d_matrix(feature_class, kwargs):
     """
@@ -39,8 +41,12 @@ def test_feature_returns_2d_matrix(feature_class, kwargs):
     """
     extractor = feature_class(**kwargs)
     result = extractor.transform(MOCK_AUDIO)
-    assert isinstance(result, np.ndarray), f"{feature_class.__name__} did not return a numpy array"
-    assert result.ndim == 2, f"{feature_class.__name__} returned {result.ndim}D, expected 2D"
+    assert isinstance(
+        result, np.ndarray), f"{
+        feature_class.__name__} did not return a numpy array"
+    assert result.ndim == 2, f"{
+        feature_class.__name__} returned {
+        result.ndim}D, expected 2D"
     # Also ensure height > 0 and time > 0
     assert result.shape[0] > 0, "Height dimension is zero"
     assert result.shape[1] > 0, "Time dimension is zero"
@@ -48,6 +54,8 @@ def test_feature_returns_2d_matrix(feature_class, kwargs):
 # ----------------------------------------------------------------------
 # Model Architecture Test
 # ----------------------------------------------------------------------
+
+
 def test_cnn_architect_has_13_layers():
     """
     Verify that CNNArchitect built model has exactly 13 layers,
@@ -75,6 +83,8 @@ def test_cnn_architect_has_13_layers():
 # ----------------------------------------------------------------------
 # Input/Output Shape Test
 # ----------------------------------------------------------------------
+
+
 @pytest.mark.parametrize("feature_name, model_type, input_shape", [
     ('mel_spectrogram', 'cnn', (128, None, 1)),
     ('mfcc', 'cnn', (20, None, 1)),
@@ -83,7 +93,8 @@ def test_cnn_architect_has_13_layers():
     ('cqt_chromagram', 'cnn', (12, None, 1)),
     ('cens_chromagram', 'cnn', (12, None, 1)),
 ])
-def test_model_input_shape_matches_feature_output(feature_name, model_type, input_shape):
+def test_model_input_shape_matches_feature_output(
+        feature_name, model_type, input_shape):
     """
     Verify that the model's input shape is compatible with the feature's output shape.
     We create a dummy feature of shape (height, time, 1) and ensure the model can process it.
@@ -93,7 +104,8 @@ def test_model_input_shape_matches_feature_output(feature_name, model_type, inpu
     dummy_feature = np.random.randn(1, height, 100, 1).astype(np.float32)
 
     # Build model using factory
-    model = ModelFactory.create_model(feature_name, model_type=model_type, num_classes=50)
+    model = ModelFactory.create_model(
+        feature_name, model_type=model_type, num_classes=50)
 
     # Try a forward pass; if shape mismatch, this will raise an error
     try:
@@ -101,5 +113,7 @@ def test_model_input_shape_matches_feature_output(feature_name, model_type, inpu
     except Exception as e:
         pytest.fail(f"Model forward pass failed with shape mismatch: {e}")
 
-    # Also check that the input shape defined by the factory matches what we expect
-    assert model.input_shape == input_shape, f"Model input shape {model.input_shape} does not match expected {input_shape}"
+    # Also check that the input shape defined by the factory matches what we
+    # expect
+    assert model.input_shape == input_shape, f"Model input shape {
+        model.input_shape} does not match expected {input_shape}"

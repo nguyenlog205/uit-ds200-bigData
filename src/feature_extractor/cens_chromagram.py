@@ -37,6 +37,7 @@ Returns:
 import numpy as np
 import librosa
 
+
 class CENSChromagram:
     def __init__(self,
                  sr=44100,
@@ -89,4 +90,5 @@ class CENSChromagram:
             norm_smooth=self.norm_smooth,
             dtype=self.dtype
         )
+
         return cens
