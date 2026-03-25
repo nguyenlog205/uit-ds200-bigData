@@ -12,7 +12,7 @@ class STFTChromagram:
         self.n_chroma = n_chroma
         self.window = np.hanning(n_fft)
 
-    def extract(self, audio):
+    def transform(self, audio):
         n_frames = 1 + (len(audio) - self.n_fft) // self.hop_length
         stft_matrix = np.empty((self.n_fft // 2 + 1, n_frames), dtype=complex)
         # biến đổi Fourier theo STFT theo từng chỉ số frame
