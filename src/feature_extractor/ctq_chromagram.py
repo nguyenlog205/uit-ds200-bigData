@@ -32,6 +32,7 @@ Returns:
 import numpy as np
 import librosa
 
+
 class CQTChromagram:
     def __init__(self,
                  sr=44100,

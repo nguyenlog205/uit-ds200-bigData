@@ -90,5 +90,5 @@ class CENSChromagram:
             norm_smooth=self.norm_smooth,
             dtype=self.dtype
         )
-        
+
         return cens

@@ -5,7 +5,14 @@ import matplotlib.pyplot as plt
 
 
 class MelScaleSpectrogram:
-    def __init__(self, sr=44100, to_db=True, n_fft=2048, hop_length=512, n_mels=128, power=2.0):
+    def __init__(
+            self,
+            sr=44100,
+            to_db=True,
+            n_fft=2048,
+            hop_length=512,
+            n_mels=128,
+            power=2.0):
         """
         Khởi tạo module Mel-spectrogram với các siêu tham số.
         :param sr: Sampling rate (mặc định 44.1kHz)
