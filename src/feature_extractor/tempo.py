@@ -20,7 +20,7 @@ Returns:
 """
 class CyclicTempogram:
     def __init__(self, sr=44100, hop_length=512, win_length=384):
-        self.sr = sr 
+        self.sr = sr
         self.hop_length = hop_length
         self.win_length = win_length
 

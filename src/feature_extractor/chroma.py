@@ -1,10 +1,9 @@
 import numpy as np
 import librosa
 import librosa.display
-import matplotlib.pyplot as plt
-"""
-STFT Chromagram Module
+# import matplotlib.pyplot as plt
 
+"""
 Module use short-time Fourier transform algorithms for audio signal processing to extract the frequency information of audio over time.
 Module analyze harmonic and tonal content, mapping spectral energy to 12 pitch classes (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
 
