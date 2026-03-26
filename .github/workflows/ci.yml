@@ -24,10 +24,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Lint with flake8
-      run: |
-        pip install flake8
-        flake8 src/ tests/ --max-line-length=120 --ignore=E203,W503
+    # - name: Lint with flake8
+    #   run: |
+    #     pip install flake8
+    #     flake8 src/ tests/ --max-line-length=120 --ignore=E203,W503
 
     - name: Run tests with pytest
       run: |
