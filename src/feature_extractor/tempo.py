@@ -2,7 +2,9 @@ import numpy as np
 import librosa
 
 class CyclicTempogram:
-    def __init__(self, sr=44100, hop_length=512, n_cyclic=12, tempo_min=40, tempo_max=240, method='fourier', window=384, onset_hop_length=512, onset_smooth=9):
+    def __init__(self, sr=44100, hop_length=512, n_cyclic=12,
+                 tempo_min=40, tempo_max=240, method='fourier',
+                 window=384, onset_hop_length=512):
         self.sr = sr
         self.hop_length = hop_length
         self.n_cyclic = n_cyclic
@@ -11,17 +13,16 @@ class CyclicTempogram:
         self.method = method
         self.window = window
         self.onset_hop_length = onset_hop_length
-        self.onset_smooth = onset_smooth
 
     def transform(self, audio_1d):
+        # Onset strength envelope (không truyền tham số không cần thiết)
         onset_env = librosa.onset.onset_strength(
             y=audio_1d,
             sr=self.sr,
-            hop_length=self.onset_hop_length,
-            aggregate=np.median,
-            smooth=self.onset_smooth
+            hop_length=self.onset_hop_length
         )
 
+        # Compute tempogram
         if self.method == 'fourier':
             tempogram = librosa.feature.tempogram(
                 onset_envelope=onset_env,
@@ -41,6 +42,7 @@ class CyclicTempogram:
                 norm=None
             )
 
+        # Convert to cyclic bins (octave wrapping)
         n_tempo = tempogram.shape[0]
         tempo_bins = librosa.tempo_frequencies(n_tempo, sr=self.sr, hop_length=self.hop_length)
 
@@ -55,7 +57,15 @@ class CyclicTempogram:
         for i, idx in enumerate(cyclic_idx):
             cyclic_temp[idx, :] += tempogram_masked[i, :]
 
+        # Normalize
         max_val = cyclic_temp.max()
         if max_val > 0:
             cyclic_temp = cyclic_temp / max_val
         return cyclic_temp
+
+    def shape(self, tempo):
+        print(f"Shape of output: {tempo.shape}")
+
+    def plot(self, feature_matrix, ax):
+        # Có thể bỏ qua hoặc implement sau
+        pass
