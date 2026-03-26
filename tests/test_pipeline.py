@@ -13,10 +13,6 @@ from src.feature_extractor.chroma import STFTChromagram          # STFT chromagr
 from src.feature_extractor.ctq_chromagram import CQTChromagram   # CQT chromagram (filename typo)
 from src.feature_extractor.cens_chromagram import CENSChromagram
 
-# TODO: create model_factory.py and import from it
-# from src.models.model_factory import ModelFactory, CNNArchitect
-
-# Mock audio: 5 seconds at 44.1 kHz -> 220500 samples
 AUDIO_LEN = 220500
 MOCK_AUDIO = np.random.randn(AUDIO_LEN).astype(np.float32)
 
