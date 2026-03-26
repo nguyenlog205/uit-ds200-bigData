@@ -3,44 +3,31 @@ import librosa
 
 class CyclicTempogram:
     def __init__(self, sr=44100, hop_length=512, n_cyclic=12,
-                 tempo_min=40, tempo_max=240, method='fourier',
-                 window=384, onset_hop_length=512):
+                 tempo_min=40, tempo_max=240, window=384, onset_hop_length=512):
         self.sr = sr
         self.hop_length = hop_length
         self.n_cyclic = n_cyclic
         self.tempo_min = tempo_min
         self.tempo_max = tempo_max
-        self.method = method
         self.window = window
         self.onset_hop_length = onset_hop_length
 
     def transform(self, audio_1d):
-        # Onset strength envelope (không truyền tham số không cần thiết)
+        # Onset strength envelope
         onset_env = librosa.onset.onset_strength(
             y=audio_1d,
             sr=self.sr,
             hop_length=self.onset_hop_length
         )
 
-        # Compute tempogram
-        if self.method == 'fourier':
-            tempogram = librosa.feature.tempogram(
-                onset_envelope=onset_env,
-                sr=self.sr,
-                hop_length=self.hop_length,
-                win_length=self.window,
-                mode='fourier',
-                norm=None
-            )
-        else:
-            tempogram = librosa.feature.tempogram(
-                onset_envelope=onset_env,
-                sr=self.sr,
-                hop_length=self.hop_length,
-                win_length=self.window,
-                mode='autocorrelation',
-                norm=None
-            )
+        # Compute tempogram (Fourier method)
+        tempogram = librosa.feature.tempogram(
+            onset_envelope=onset_env,
+            sr=self.sr,
+            hop_length=self.hop_length,
+            win_length=self.window,
+            norm=None
+        )
 
         # Convert to cyclic bins (octave wrapping)
         n_tempo = tempogram.shape[0]
@@ -67,5 +54,4 @@ class CyclicTempogram:
         print(f"Shape of output: {tempo.shape}")
 
     def plot(self, feature_matrix, ax):
-        # Có thể bỏ qua hoặc implement sau
         pass
