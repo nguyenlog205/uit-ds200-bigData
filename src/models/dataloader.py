@@ -69,7 +69,7 @@ def get_data_loaders(data_dir, feature_extractor, batch_size=32, sample_rate=441
 def create_dataset(feature_extracting, sample_rate, duration):
     def processor(file_path):
         audio_array, _ = librosa.load(file_path, sr=sample_rate, duration=duration)
-        feature_matrix = feature_extracting.extract(audio_array)
+        feature_matrix = feature_extracting.transform(audio_array)
         # Matrix 2D --> thêm chiều số channel mặc định là 1 để cnn chạy (height, width, 1)
         feature_cnn = np.expand_dims(feature_matrix, axis=-1)
         return feature_cnn
