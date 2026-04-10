@@ -80,7 +80,7 @@ class AudioModelTrainer:
         ]
         return callbacks
 
-    def train(self, num_epochs=50):
+    def train(self, workers, num_epochs=50):
         """
         Using MLFlow Tracking to train model CNN
         """      
@@ -92,7 +92,9 @@ class AudioModelTrainer:
                 self.train_ds,
                 validation_data=self.val_ds,
                 epochs=num_epochs,
-                callbacks=self._get_callbacks()
+                callbacks=self._get_callbacks(),
+                use_multiprocessing=True, # giúp chạy đa tiến trình -> CPU chạy song song các lõi CPU được chia
+                workers = workers # số lượng lõi CPU hoạt động cùng lúc
             )
         print("Save model: ",self.checkpoint_dir)
         return history
