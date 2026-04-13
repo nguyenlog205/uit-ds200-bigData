@@ -21,7 +21,7 @@ extraction_control:
   chunk_size: 100
   seed: 42
 
-features_extractor_params:
+feature_extractor_params:
   extract_list: ['melspectrogram', 'mfcc', 'chroma_stft', 'cens_chromagram', 'cqt_chromagram', 'cyclic_tempogram']
   
   # (1) --- cens_chromagram ---

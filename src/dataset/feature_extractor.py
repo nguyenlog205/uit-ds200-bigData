@@ -132,6 +132,6 @@ if __name__ == '__main__':
         default='configs/pretraining/feature_extractor.yml'
     )
     args = parser.parse_args()
-    # extract_feature(args.config)
+    extract_feature(args.config)
 
 # python -m src.dataset.feature_extractor
