@@ -23,3 +23,14 @@ where:
 - `-m src.dataset.data_splitter`: Run the `src/dataset/data_splitter.py` as a module.
 - `-d configs/pretraining/data_splitter.yml`: Read the configuration file from `configs/pretraining/data_splitter.yml`.
 > P/s: If you want to change the hyperparameters while splitting, just change it in the `configs/pretraining/data_splitter.yml` file.
+
+#### 3.1.3. Feature extraction
+After data splitting completion, run the script below to extract 06 features from each audio file. 
+
+```bash
+python -m src.dataset.feature_extractor --config configs/pretraining/feature_extractor.yml
+```
+where:
+- `-m src.dataset.feature_extractor`: Run the `src/dataset/feature_extractor.py` as a module.
+- `--config configs/pretraining/feature_extractor.yml`: Read the configuration file from `configs/pretraining/feature_extractor.yml`.
+> P/s: If you want to change the hyperparameters while splitting, just change it in the `configs/pretraining/feature_extractor.yml` file.
