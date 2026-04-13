@@ -1,0 +1,12 @@
+directories:
+  metadata_filepath: "data/meta/esc50.csv"
+  audio_dir: "data/audio/"
+  output_dir: "data/splitted/"
+
+splitting:
+  use_official_folds: true
+  test_fold: 5
+  val_fold: 4
+
+other:
+  seed: 42
