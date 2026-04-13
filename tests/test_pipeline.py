@@ -6,12 +6,12 @@ import numpy as np
 import pytest
 
 # Existing feature extractors
-from src.dataset.feature_extractor.melspectrogram import MelScaleSpectrogram
-from src.dataset.feature_extractor.mfcc import MFCC
-from src.dataset.feature_extractor.tempo import CyclicTempogram          # cyclic tempogram
-from src.dataset.feature_extractor.chroma import STFTChromagram          # STFT chromagram
-from src.dataset.feature_extractor.ctq_chromagram import CQTChromagram   # CQT chromagram (filename typo)
-from src.dataset.feature_extractor.cens_chromagram import CENSChromagram
+from src.dataset.feature_extractors.melspectrogram import MelScaleSpectrogram
+from src.dataset.feature_extractors.mfcc import MFCC
+from src.dataset.feature_extractors.tempo import CyclicTempogram          # cyclic tempogram
+from src.dataset.feature_extractors.chroma import STFTChromagram          # STFT chromagram
+from src.dataset.feature_extractors.ctq_chromagram import CQTChromagram   # CQT chromagram (filename typo)
+from src.dataset.feature_extractors.cens_chromagram import CENSChromagram
 
 AUDIO_LEN = 220500
 MOCK_AUDIO = np.random.randn(AUDIO_LEN).astype(np.float32)
