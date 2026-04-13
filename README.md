@@ -10,9 +10,38 @@
 ## 2. Repository structure
 
 ## 3. How to reproduce this project?
-
+Follow the instruction below to reproduce the paper.
 ### 3.1. Data preparation
+This stage prepares the dataset for subsequent experiments and analysis. It involves downloading the data and organizing it according to the specified directory structure. The data is then split into different folds (train, validation, test), and finally, various spectrogram features are extracted before proceeding with further tasks.
 #### 3.1.1. Data preparation
+Access this [link](https://drive.google.com/drive/folders/15Bd4AoVXwEvjfukuliPj6HrnIdokXFNL?usp=sharing) to download dataset. 
+##### Instructions:
+1. Download the entire folder from the Google Drive link.
+2. Extract (if needed) and place all `.wav` files into `data/audio/`.
+3. Place the `esc50.csv` metadata file into `data/meta/`.
+4. Ensure your YAML configuration file points to the correct paths:
+    - `audio_dir: 'data/audio/'`
+    - `metadata_filepath: 'data/meta/esc50.csv'`
+
+```txt
+project/data/
+├── audio
+│   ├── 1-137-A-32.wav
+│   ├── 1-977-A-39.wav
+│   └── ... # Very many files, 2000 files in total.
+├── meta
+│   ├── esc50-human.xlsx
+│   └── esc50.csv
+├── esc50.gif
+├── LICENSE
+└── README.md
+```
+> P/s: This dataset is ESC-50 (Environmental Sound Classification).
+> - **Author**: Karol J. Piczak
+> - **License**: [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+> - **Citation requirement**: If used for research or publication, please cite the original paper:
+> 
+> `Piczak, K. J. (2015). ESC: Dataset for Environmental Sound Classification. In Proceedings of the 23rd ACM international conference on Multimedia (pp. 1015-1018).`
 
 #### 3.1.2. Data splitting
 To split the dataset, run the script below:
