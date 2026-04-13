@@ -15,11 +15,11 @@
 #### 3.1.1. Data preparation
 
 #### 3.1.2. Data splitting
-To splitting the dataset, run the script below:
+To split the dataset, run the script below:
 ```bash
 python -m src.dataset.data_splitter -d configs/pretraining/data_splitter.yml
 ```
-where 
+where:
 - `-m src.dataset.data_splitter`: Run the `src/dataset/data_splitter.py` as a module.
-- `-d configs/pretraining/data_splitter.yml`: Read configuration file from `configs/pretraining/data_splitter.yml`
-If you want to change the hyperparameters while splitting, just change it in the `configs/pretraining/data_splitter.yml` file.
+- `-d configs/pretraining/data_splitter.yml`: Read the configuration file from `configs/pretraining/data_splitter.yml`.
+> P/s: If you want to change the hyperparameters while splitting, just change it in the `configs/pretraining/data_splitter.yml` file.
