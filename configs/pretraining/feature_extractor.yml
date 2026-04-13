@@ -1,0 +1,93 @@
+directories:
+  audio_dir: [
+    'data/splitted/train/', 
+    'data/splitted/val/', 
+    'data/splitted/test/'
+  ]
+  metadata_dir: [
+    'data/splitted/train.csv', 
+    'data/splitted/val.csv', 
+    'data/splitted/test.csv'
+  ]
+
+  output_dir: 'data/features/'
+
+extraction_control:
+  duration: 5.0
+  mono: true
+  target_sr: 44100
+  save_format: "npy"
+  group_by_feature: false
+  chunk_size: 100
+  seed: 42
+
+features_extractor_params:
+  extract_list: ['melspectrogram', 'mfcc', 'chroma_stft', 'cens_chromagram', 'cqt_chromagram', 'cyclic_tempogram']
+  
+  # (1) --- cens_chromagram ---
+  cens_chromagram:
+    sr: 44100
+    hop_length: 512
+    n_chroma: 12
+    fmin: 32.70319566257483  # librosa.note_to_hz('C1')
+    norm: 1
+    bins_per_octave: 12
+    win_len_smooth: 41
+  
+  # (2) --- chromagram ---
+  chroma_stft:
+    sr: 44100
+    hop_length: 512
+    n_fft: 2048
+    n_chroma: 12
+  
+  # (3) --- cqt_chromagram ---
+  cqt_chromagram:
+    sr: 44100
+    hop_length: 512
+    n_chroma: 12
+    bins_per_octave: 12
+    fmin: 32.70319566257483  # librosa.note_to_hz('C1')
+    norm: 1
+
+  # (4) --- melspectrogram ---
+  melspectrogram:
+    sr: 44100
+    to_db: true
+    n_fft: 2048
+    hop_length: 512
+    n_mels: 128
+    power: 2.0
+
+  # (5) --- mfcc ---
+  mfcc:
+    sr: 44100
+    n_mfcc: 20
+    n_fft: 2048
+    hop_length: 512
+    n_mels: 128
+  
+  # (6) --- cyclic_tempogram ---
+  cyclic_tempogram:
+    sr: 44100
+    hop_length: 512
+    n_cyclic: 12
+    tempo_min: 40
+    tempo_max: 240
+    window: 384
+    onset_hop_length: 512
+
+
+
+
+
+
+
+
+# data/features/
+#    train/
+#        file1-feature1
+#        file1-feature2
+#    dev 
+#        file1-feature1
+#
