@@ -1,4 +1,4 @@
-name: "AST"
+name: "ast"
 num_classes: 50
 input_fdim: 128
 input_tdim: 512
