@@ -1,0 +1,4 @@
+name: "linear_svm"
+input_dim: 50
+class_num: 50
+C: 1.0
