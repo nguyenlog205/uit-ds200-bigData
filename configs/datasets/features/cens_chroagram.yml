@@ -1,4 +1,0 @@
-name: "CENS_Chromagram"
-feature_dir: "cens_chromagram/"
-input_dim: 5172
-input_channels: 1

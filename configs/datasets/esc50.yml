@@ -3,7 +3,13 @@ num_classes: 50
 audio_dir: "data/audio/"
 metadata_filepath: "data/meta/esc50.csv"
 feature_root: "data/features/"
-splits:
-  train: "train"
-  val: "val"
-  test: "test"
+feature_details:
+  name: ['cens_chromagram', 'chroma', 'ctq_chromagram', 'melspectrogram', 'mfcc', 'tempo']
+  input_dim: [5172, 5172, 5172, 55168, 8620, 5172]
+  splits:
+    train: "train.csv"
+    val: "val.csv"
+    test: "test.csv"
+
+dataloader:
+  num_workers: 4

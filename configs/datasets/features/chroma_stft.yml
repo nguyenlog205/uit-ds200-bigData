@@ -1,4 +1,0 @@
-name: "Chroma_STFT"
-feature_dir: "chroma_stft/"
-input_dim: 5172           # 12 chroma * 431
-input_channels: 1

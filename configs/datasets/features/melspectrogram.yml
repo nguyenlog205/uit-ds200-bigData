@@ -1,4 +1,0 @@
-name: "MelSpectrogram"
-feature_dir: "melspectrogram/"
-input_dim: 55168
-input_channels: 1

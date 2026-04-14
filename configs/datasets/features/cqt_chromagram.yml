@@ -1,4 +1,0 @@
-name: "CQT_Chromagram"
-feature_dir: "cqt_chromagram/"
-input_dim: 5172
-input_channels: 1
