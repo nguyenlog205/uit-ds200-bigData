@@ -118,7 +118,7 @@ if __name__ == '__main__':
         '-d', 
         '--config', 
         type=str, 
-        default='configs/pretraining/data_splitter.yml',
+        default='configs/datasets/data_splitter.yml',
         help='Path to the configuration file (default: configs/pretraining/data_splitter.yml)'
     )
     args = parser.parse_args()

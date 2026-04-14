@@ -1,0 +1,15 @@
+training:
+  epochs: 50
+  batch_size: 32
+  learning_rate: 0.001
+  optimizer: "Adam"
+  scheduler_patience: 3
+  early_stop_patience: 7
+  save_dir: "checkpoints/"
+
+dataset:
+  name: "ESC-50"
+  data_dir: "data/ESC-50"
+  val_split: 0.2
+  num_workers: 4
+  seed: 42
