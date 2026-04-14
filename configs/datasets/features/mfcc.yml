@@ -1,0 +1,4 @@
+name: "MFCC"
+feature_dir: "mfcc/"
+input_dim: 8620           # 20 mfcc * 431
+input_channels: 1

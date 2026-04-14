@@ -1,0 +1,9 @@
+name: "ESC-50"
+num_classes: 50
+audio_dir: "data/audio/"
+metadata_filepath: "data/meta/esc50.csv"
+feature_root: "data/features/"
+splits:
+  train: "train"
+  val: "val"
+  test: "test"

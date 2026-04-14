@@ -1,0 +1,4 @@
+name: "Cyclic_Tempogram"
+feature_dir: "cyclic_tempogram/"
+input_dim: 5172
+input_channels: 1
