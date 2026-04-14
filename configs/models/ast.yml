@@ -1,0 +1,8 @@
+name: "AST"
+num_classes: 50
+input_fdim: 128
+input_tdim: 512
+patch_size: 16
+embed_dim: 768
+num_heads: 12
+num_layers: 12
