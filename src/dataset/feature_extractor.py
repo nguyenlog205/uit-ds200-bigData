@@ -129,7 +129,7 @@ if __name__ == '__main__':
         '-d', 
         '--config', 
         type=str, 
-        default='configs/pretraining/feature_extractor.yml'
+        default='configs/datasets/feature_extractor.yml'
     )
     args = parser.parse_args()
     extract_feature(args.config)

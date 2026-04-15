@@ -1,0 +1,7 @@
+# configs/experiments/cnn_mel_esc50.yml
+model: !include ../models/cnn.yml
+dataset: !include ../datasets/esc50.yml
+training: !include ../training/default.yml
+
+others:
+  save_dir: "checkpoints/cnn_mel_esc50"

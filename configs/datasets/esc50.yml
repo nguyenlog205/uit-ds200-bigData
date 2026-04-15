@@ -1,0 +1,15 @@
+name: "ESC-50"
+num_classes: 50
+audio_dir: "data/audio/"
+metadata_filepath: "data/meta/esc50.csv"
+feature_root: "data/features/"
+feature_details:
+  name: ['cens_chromagram', 'chroma_stft', 'cqt_chromagram', 'melspectrogram', 'mfcc', 'cyclic_tempogram']
+  input_dim: [5172, 5172, 5172, 55168, 8620, 5172]
+  splits:
+    train: "train.csv"
+    val: "val.csv"
+    test: "test.csv"
+
+dataloader:
+  num_workers: 4
