@@ -50,15 +50,15 @@ def main():
         train_loader = datamodule.train_dataloader()
         val_loader = datamodule.val_dataloader()
 
-        # 2. Create model (adjust input_channels if needed; CNN uses 1)
+        # Create model (adjust input_channels if needed; CNN uses 1)
         model = ModelFactory.create_model(model_cfg)
 
-        # 3. Override save_dir for this feature
+        # Override save_dir for this feature
         feat_save_dir = Path(training_cfg['save_dir']) / f"{model_cfg['name']}_{fname}"
         feat_training_cfg = training_cfg.copy()
         feat_training_cfg['save_dir'] = str(feat_save_dir)
 
-        # 4. Train
+        # Train
         trainer = Trainer(model=model, config=feat_training_cfg, device=device)
         trainer.fit(train_loader, val_loader)
 
@@ -66,4 +66,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # python -m src.training.train --config configs/experiments/cnn_models.yml
+    # python -m src.training.main --config configs/experiments/cnn_models.yml
