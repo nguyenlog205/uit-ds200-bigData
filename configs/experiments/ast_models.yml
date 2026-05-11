@@ -1,0 +1,9 @@
+# configs/experiments/ast_models.yml
+model: !include ../models/ast.yml
+dataset: !include ../datasets/esc50.yml
+training: !include ../training/default.yml
+
+others:
+  save_dir: "checkpoints/ast_mel_esc50"
+  augment: False
+# python -m src.training.train --config configs/experiments/ast_models.yml

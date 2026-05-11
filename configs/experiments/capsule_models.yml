@@ -1,0 +1,38 @@
+# configs/experiments/capsule_models.yml
+model: !include ../models/capsule_network.yml
+dataset: !include ../datasets/esc50.yml
+training: !include ../training/default.yml
+
+
+dataset:
+  name: "ESC-50"
+  num_classes: 50
+  audio_dir: "data/audio/"
+  metadata_filepath: "data/meta/esc50.csv"
+  feature_root: "data/features/"
+  feature_details:
+    name: ['melspectrogram', 'mfcc']   # thêm 'mfcc' nếu muốn thử
+    input_dim: [55168]
+    splits:
+      train: "train.csv"
+      val: "val.csv"
+      test: "test.csv"
+
+  dataloader:
+    num_workers: 4
+
+training:
+  epochs: 100
+  batch_size: 16
+  learning_rate: 0.005
+  optimizer: "Adam"
+  weight_decay: 0.0001
+  scheduler_patience: 5
+  early_stop_patience: 6
+  save_dir: "checkpoints/"
+  log_interval: 10
+  seed: 42
+
+others:
+  save_dir: "checkpoints/capsule_mel_esc50"
+  augment: False
