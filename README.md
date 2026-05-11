@@ -63,3 +63,5 @@ where:
 - `-m src.dataset.feature_extractor`: Run the `src/dataset/feature_extractor.py` as a module.
 - `--config configs/datasets/feature_extractor.yml`: Read the configuration file from `configs/datasets/feature_extractor.yml`.
 > P/s: If you want to change the hyperparameters while splitting, just change it in the `configs/datasets/feature_extractor.yml` file.
+
+### 3.2. Model training
