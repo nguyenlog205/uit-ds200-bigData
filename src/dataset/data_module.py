@@ -10,10 +10,17 @@ from src.utils.config_loader import load_config
 # -------------------- FeatureDataset--------------------
 class FeatureDataset(Dataset):
     """Dataset for pre-extracted .npy feature files using metadata CSV."""
-    def __init__(self, metadata: pd.DataFrame, feature_name: str):
+    def __init__(
+        self,
+        metadata: pd.DataFrame, 
+        feature_name: str,
+        augment: bool = False
+    ):
         self.metadata = metadata[metadata['feature_name'] == feature_name].reset_index(drop=True)
+        self.augment = augment
         if len(self.metadata) == 0:
             raise ValueError(f"No samples found for feature_name='{feature_name}'")
+        
 
     def __len__(self):
         return len(self.metadata)
@@ -31,15 +38,29 @@ class FeatureDataset(Dataset):
         elif feature_tensor.ndim == 1:
             feature_tensor = feature_tensor.unsqueeze(0)
 
+        if self.augment:
+            feature_tensor = self._apply_augment(feature_tensor)
         return feature_tensor, label
 
+    def _apply_augment(self, x):
+        _, H, W = x.shape
+        max_t_mask = max(1, W // 20)
+        t_mask = torch.randint(1, max_t_mask + 1, (1,)).item()
+        t_start = torch.randint(0, max(1, W - t_mask), (1,)).item()
+        x[:, :, t_start:t_start + t_mask] = 0.0
+
+        max_f_mask = max(1, H // 20)
+        f_mask = torch.randint(1, max_f_mask + 1, (1,)).item()
+        f_start = torch.randint(0, max(1, H - f_mask), (1,)).item()
+        x[:, f_start:f_start + f_mask, :] = 0.0
+        return x
 
 # -------------------- FeatureDataModule --------------------
 class FeatureDataModule:
     def __init__(
         self,
         feature_name: str,
-        experiment_configuration_path: str = 'configs/experiments/cnn_models.yml'
+        experiment_configuration_path: str = 'configs/experiments/cnn_models.yml',
     ):
         self.config = load_config(experiment_configuration_path)
         self.feature_name = feature_name
@@ -66,11 +87,13 @@ class FeatureDataModule:
         self.val_dataset = None
         self.test_dataset = None
 
+        self.is_augment = self.config['others']['augment']
+
     def setup(self):
         """Tạo dataset từ metadata đã load."""
-        self.train_dataset = FeatureDataset(self.metadata['train'], self.feature_name)
-        self.val_dataset = FeatureDataset(self.metadata['dev'], self.feature_name)
-        self.test_dataset = FeatureDataset(self.metadata['test'], self.feature_name)
+        self.train_dataset = FeatureDataset(self.metadata['train'], self.feature_name, augment=self.is_augment)
+        self.val_dataset = FeatureDataset(self.metadata['dev'], self.feature_name, augment= False)
+        self.test_dataset = FeatureDataset(self.metadata['test'], self.feature_name, augment=False)
 
     def train_dataloader(self):
         return DataLoader(

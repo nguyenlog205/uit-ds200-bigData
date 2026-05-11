@@ -1,3 +1,4 @@
+# src/training/trainer.py
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -5,9 +6,10 @@ from torch.utils.data import DataLoader
 from pathlib import Path
 import logging
 import pandas as pd
+import numpy as np
 from typing import Optional, Dict, List
 from sklearn.metrics import accuracy_score, f1_score
-from tqdm import tqdm  # Thêm thư viện tqdm
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +50,8 @@ class Trainer:
             'val_f1': []
         }
 
+        self.best_model_path = None  # lưu đường dẫn checkpoint tốt nhất
+
     def _init_optimizer(self):
         if self.optimizer_name.lower() == 'adam':
             self.optimizer = optim.Adam(
@@ -64,14 +68,11 @@ class Trainer:
         best_val_loss = float('inf')
         patience_counter = 0
 
-        # Thanh tiến trình cho tổng số epoch
         epoch_pbar = tqdm(range(self.epochs), desc="Training", unit="epoch")
 
         for epoch in epoch_pbar:
-            # Training (có thanh tiến trình cho từng batch)
             train_loss, train_acc, train_f1 = self._train_one_epoch(train_loader, epoch)
 
-            # Validation
             val_loss, val_acc, val_f1 = self._evaluate(val_loader)
 
             # Lưu history
@@ -83,14 +84,12 @@ class Trainer:
             self.history['val_acc'].append(val_acc)
             self.history['val_f1'].append(val_f1)
 
-            # Cập nhật thông tin trên thanh tiến trình epoch
             epoch_pbar.set_postfix({
                 'train_loss': f"{train_loss:.4f}",
                 'val_loss': f"{val_loss:.4f}",
                 'val_acc': f"{val_acc:.4f}"
             })
 
-            # Ghi log chi tiết (dùng tqdm.write để không phá vỡ thanh tiến trình)
             tqdm.write(
                 f"Epoch {epoch+1}/{self.epochs} | "
                 f"Train Loss: {train_loss:.4f} Acc: {train_acc:.4f} F1: {train_f1:.4f} | "
@@ -108,6 +107,10 @@ class Trainer:
                     tqdm.write(f"Early stopping triggered at epoch {epoch+1}")
                     break
 
+        # Load best model và lưu dự đoán
+        self._load_best_model()
+        self._save_predictions(val_loader)
+
         # Lưu history
         self._save_history()
         tqdm.write("Training finished.")
@@ -118,7 +121,6 @@ class Trainer:
         all_preds = []
         all_targets = []
 
-        # Thanh tiến trình cho từng batch trong một epoch
         batch_pbar = tqdm(loader, desc=f"Epoch {epoch+1} [Train]", leave=False, unit="batch")
 
         for inputs, targets in batch_pbar:
@@ -135,7 +137,6 @@ class Trainer:
             all_preds.extend(preds.cpu().numpy())
             all_targets.extend(targets.cpu().numpy())
 
-            # Cập nhật loss trên thanh batch (tùy chọn)
             batch_pbar.set_postfix({'loss': f"{loss.item():.4f}"})
 
         avg_loss = total_loss / len(loader.dataset)
@@ -149,7 +150,6 @@ class Trainer:
         all_preds = []
         all_targets = []
 
-        # Thanh tiến trình cho validation (có thể để leave=False để ẩn sau khi xong)
         val_pbar = tqdm(loader, desc="Validation", leave=False, unit="batch")
 
         with torch.no_grad():
@@ -177,10 +177,52 @@ class Trainer:
         }
         if is_best:
             path = self.save_dir / 'best_model.pth'
+            self.best_model_path = path
         else:
             path = self.save_dir / f'epoch_{epoch+1}.pth'
         torch.save(checkpoint, path)
         tqdm.write(f"Checkpoint saved to {path}")
+
+    def _load_best_model(self):
+        if self.best_model_path and self.best_model_path.exists():
+            checkpoint = torch.load(self.best_model_path, map_location=self.device)
+            self.model.load_state_dict(checkpoint['model_state_dict'])
+            logger.info(f"Loaded best model from {self.best_model_path}")
+        else:
+            logger.warning("No best model found, using current model state.")
+
+    def _save_predictions(self, loader: DataLoader, save_logits: bool = False):
+        """
+        Lưu kết quả dự đoán của mô hình trên một DataLoader.
+        """
+        self.model.eval()
+        all_targets = []
+        all_preds = []
+        all_logits = [] if save_logits else None
+
+        with torch.no_grad():
+            for inputs, targets in tqdm(loader, desc="Saving predictions"):
+                inputs = inputs.to(self.device)
+                outputs = self.model(inputs)
+                _, preds = torch.max(outputs, dim=1)
+
+                all_targets.extend(targets.cpu().numpy())
+                all_preds.extend(preds.cpu().numpy())
+                if save_logits:
+                    all_logits.append(outputs.cpu().numpy())
+
+        df = pd.DataFrame({
+            'target': all_targets,
+            'predicted': all_preds
+        })
+        csv_path = self.save_dir / 'predictions.csv'
+        df.to_csv(csv_path, index=False)
+        tqdm.write(f"Predictions saved to {csv_path}")
+
+        if save_logits:
+            logits = np.vstack(all_logits)
+            np.save(self.save_dir / 'logits.npy', logits)
+            tqdm.write(f"Logits saved to {self.save_dir / 'logits.npy'}")
 
     def _save_history(self):
         """Save training history to CSV file."""

@@ -1,7 +1,11 @@
-# capsule_network.py
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+def squash(x, dim=-1):
+    norm_sq = (x ** 2).sum(dim=dim, keepdim=True)
+    scale = norm_sq / (1 + norm_sq)
+    return scale * x / torch.sqrt(norm_sq + 1e-8)
 
 class PrimaryCaps(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride, padding=0):
@@ -10,7 +14,8 @@ class PrimaryCaps(nn.Module):
 
     def forward(self, x):
         out = self.conv(x)
-        out = out.view(out.size(0), -1, 8)
+        batch_size = out.size(0)
+        out = out.view(batch_size, -1, 8)
         return squash(out)
 
 class DigitCaps(nn.Module):
@@ -25,31 +30,39 @@ class DigitCaps(nn.Module):
 
     def forward(self, x):
         batch_size = x.size(0)
-        x = x.unsqueeze(2).unsqueeze(4)
-        u_hat = torch.matmul(self.W, x).squeeze(4)
+        x = x.unsqueeze(2).unsqueeze(4)                    # (B, in_caps, 1, in_dim, 1)
+        u_hat = torch.matmul(self.W, x).squeeze(4)         # (B, in_caps, out_caps, out_dim)
         b = torch.zeros(batch_size, self.in_caps, self.out_caps, 1, device=x.device)
+
         for _ in range(self.routing_iters):
             c = F.softmax(b, dim=2)
             s = (c * u_hat).sum(dim=1, keepdim=True)
             v = squash(s)
             if _ < self.routing_iters - 1:
                 b = b + (u_hat * v).sum(dim=-1, keepdim=True)
-        return v.squeeze(1)
-
-def squash(x, dim=-1):
-    norm_sq = (x ** 2).sum(dim=dim, keepdim=True)
-    scale = norm_sq / (1 + norm_sq)
-    return scale * x / torch.sqrt(norm_sq + 1e-8)
+        return v.squeeze(1)   # (B, out_caps, out_dim)
 
 class CapsuleNetwork(nn.Module):
     def __init__(self, num_classes=50, input_channels=1):
         super().__init__()
-        self.conv1 = nn.Conv2d(input_channels, 256, kernel_size=9, stride=1)
+        # Backbone nhẹ để giảm kích thước
+        self.backbone = nn.Sequential(
+            nn.Conv2d(input_channels, 256, kernel_size=9, stride=1, padding=4),
+            nn.ReLU(inplace=True),
+            nn.AdaptiveAvgPool2d((20, 20))   # ép về kích thước cố định
+        )
         self.primary_caps = PrimaryCaps(256, 256, kernel_size=9, stride=2)
-        self.digit_caps = DigitCaps(in_caps=32*6*6, in_dim=8, out_caps=num_classes, out_dim=16)
+
+        # Tính số capsule đầu ra của PrimaryCaps
+        with torch.no_grad():
+            dummy = torch.zeros(1, input_channels, 20, 20)
+            dummy_out = self.primary_caps(self.backbone(dummy))
+            in_caps = dummy_out.size(1)
+
+        self.digit_caps = DigitCaps(in_caps=in_caps, in_dim=8, out_caps=num_classes, out_dim=16)
 
     def forward(self, x):
-        x = F.relu(self.conv1(x))
+        x = self.backbone(x)
         x = self.primary_caps(x)
         x = self.digit_caps(x)
         return torch.norm(x, dim=-1)
